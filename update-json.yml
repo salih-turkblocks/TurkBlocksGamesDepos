@@ -4,6 +4,9 @@ on:
   push:
   workflow_dispatch:
 
+  schedule:
+    - cron: "*/5 * * * *"
+
 permissions:
   contents: write
 
@@ -28,10 +31,10 @@ jobs:
             | sort \
             | jq -R -s 'split("\n") | map(select(length > 0))' > games.json
 
-          echo "Oluşturulan games.json:"
+          echo "games.json:"
           cat games.json
 
-      - name: games.json kaydet
+      - name: Değişiklikleri kaydet
         shell: bash
         run: |
           git config user.name "github-actions[bot]"
@@ -40,9 +43,9 @@ jobs:
           git add games.json
 
           if git diff --cached --quiet; then
-            echo "games.json zaten güncel."
+            echo "Yeni oyun yok. games.json zaten güncel."
             exit 0
           fi
 
-          git commit -m "Update games.json"
+          git commit -m "Auto-update games.json"
           git push
