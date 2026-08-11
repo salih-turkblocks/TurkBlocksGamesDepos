@@ -2,8 +2,6 @@ name: Update games.json
 
 on:
   push:
-    paths:
-      - "**/*.pck"
 
 permissions:
   contents: write
@@ -24,6 +22,11 @@ jobs:
           | sort \
           | jq -R . \
           | jq -s . > games.json
+
+      - name: Check games.json
+        run: |
+          echo "Generated games.json:"
+          cat games.json
 
       - name: Commit Changes
         run: |
