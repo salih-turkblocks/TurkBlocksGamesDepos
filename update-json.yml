@@ -3,8 +3,6 @@ name: Update games.json
 on:
   push:
   workflow_dispatch:
-  schedule:
-    - cron: "*/5 * * * *"
 
 permissions:
   contents: write
@@ -14,27 +12,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Repository'yi indir
+      - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      - name: games.json oluştur
-        shell: bash
-        run: |
-          echo "PCK dosyaları aranıyor..."
+            - name: Update games.json
+        run: find . -type f -name "*.pck" -not -path "./.git/*" -printf "%f\n" | sort | jq -R -s 'split("\n") | map(select(length > 0))' > games.json
 
-          find . -type f -name "*.pck" \
-            -not -path "./.git/*" \
-            -printf "%f\n" \
-            | sort \
-            | jq -R -s 'split("\n") | map(select(length > 0))' > games.json
-
-          echo "Oluşturulan games.json:"
-          cat games.json
-
-      - name: Değişiklikleri kaydet
-        shell: bash
+      - name: Commit games.json
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -46,5 +30,5 @@ jobs:
             exit 0
           fi
 
-          git commit -m "Auto-update games.json"
+          git commit -m "Update games.json"
           git push
