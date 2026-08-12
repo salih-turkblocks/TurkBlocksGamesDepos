@@ -15,7 +15,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-            - name: Update games.json
+                  - name: Update games.json
         run: find . -type f -name "*.pck" -not -path "./.git/*" -printf "%f\n" | sort | jq -R -s 'split("\n") | map(select(length > 0))' > games.json
 
       - name: Commit games.json
