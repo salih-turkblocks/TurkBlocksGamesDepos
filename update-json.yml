@@ -3,7 +3,6 @@ name: Update games.json
 on:
   push:
   workflow_dispatch:
-
   schedule:
     - cron: "*/5 * * * *"
 
@@ -31,7 +30,7 @@ jobs:
             | sort \
             | jq -R -s 'split("\n") | map(select(length > 0))' > games.json
 
-          echo "games.json:"
+          echo "Oluşturulan games.json:"
           cat games.json
 
       - name: Değişiklikleri kaydet
@@ -43,7 +42,7 @@ jobs:
           git add games.json
 
           if git diff --cached --quiet; then
-            echo "Yeni oyun yok. games.json zaten güncel."
+            echo "games.json zaten güncel."
             exit 0
           fi
 
